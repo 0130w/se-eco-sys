@@ -7,7 +7,7 @@
 1. 克隆本项目
 
     ```shell
-    git clone 
+    git clone git@github.com:0130w/se-eco-sys.git
     ```
 
 2. 创建`.env`文件，并填写在百度智能云申请后得到的KEY，如下所示(或自行导入环境变量，或在main.py中填写api_key)
