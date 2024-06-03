@@ -18,44 +18,35 @@ class Parser:
 
     def preprocess_chat_lines(self, chat_lines):
         """ This method read lines from output of read_chat_file method 
-            and return chatdata in form of HashTable whose key is username 
+            and return chatdata in form of HashTable whose key is user ID 
             and value is array of contents
         Args:
             chat_lines: array of lines of the input file
         Returns:
             chatdata in the form of HashTable:
-                key : username
+                key : user ID
                 value: array of contents
         """
         chat_data = {}
-        current_username = None
+        current_user_id = None
         current_message = []
-        username_pattern = re.compile(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (.+)')
-        prefix_pattern = re.compile(
-            r'^(1班——|2班——|一班——|二班——|  \
-            1班--|2班--|一班--|二班--|1班-|2班-|   \
-            一班-|二班-|1班\s|2班\s|一班\s|二班\s|  \
-            1班|2班|一班|二班)\s*'
-        )
-        non_chinese_pattern = re.compile(r'[^\u4e00-\u9fa5].*')
+        id_pattern = re.compile(r'\((\d+)\)')
 
         for line in chat_lines:
             line = line.strip()
-            match = username_pattern.match(line)
+            match = id_pattern.search(line)
             if match:
-                if current_username is not None and current_message:
-                    if current_username not in chat_data:
-                        chat_data[current_username] = []
-                    chat_data[current_username].append('\n'.join(current_message))
-                current_username = match.group(2)
-                current_username = prefix_pattern.sub('', current_username)
-                current_username = non_chinese_pattern.sub('', current_username)
+                if current_user_id is not None and current_message:
+                    if current_user_id not in chat_data:
+                        chat_data[current_user_id] = []
+                    chat_data[current_user_id].append('\n'.join(current_message))
+                current_user_id = match.group(1)
                 current_message = []
             else:
                 current_message.append(line)
 
-        if current_username is not None and current_message:
-            if current_username not in chat_data:
-                chat_data[current_username] = []
-            chat_data[current_username].append('\n'.join(current_message))
+        if current_user_id is not None and current_message:
+            if current_user_id not in chat_data:
+                chat_data[current_user_id] = []
+            chat_data[current_user_id].append('\n'.join(current_message))
         return chat_data
