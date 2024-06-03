@@ -24,7 +24,6 @@ class Filter:
                 payload = [{"role": "user", "content": self.message + message}]
                 judgement = callgpt.call_llm(payload, client)
                 if judgement == "True":
-                    print(judgement)
                     filtered_messages.append(message)
             if filtered_messages:
                 filtered_data[username] = filtered_messages
